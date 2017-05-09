@@ -11,6 +11,20 @@ module.exports = function(sequelize, DataTypes) {
       associate: models => {
         Like.belongsTo(models.user);
         Like.belongsTo(models.post);
+      },
+      isValid: like => {
+        if (!like) {
+          return false;
+        }
+
+        if (!like.userId || !like.postId) {
+          return false;
+        }
+
+        if (typeof like.userId != 'number' || typeof like.postId != 'number') {
+          return false;
+        }
+        return true;
       }
     }
   });

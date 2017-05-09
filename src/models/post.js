@@ -13,6 +13,25 @@ module.exports = function(sequelize, DataTypes) {
         Post.hasMany(models.like);
         Post.hasMany(models.comment);
         Post.belongsTo(models.user);
+      },
+      isValid: post => {
+        if (!post) {
+          return false;
+        }
+
+        if (!post.textContent || !post.image) {
+          return false;
+        }
+
+        if (typeof post.textContent != 'string') {
+          return false;
+        }
+
+        if (comment.textContent.length > 300) {
+          return false;
+        }
+
+        return true;
       }
     }
   });

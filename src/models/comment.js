@@ -12,6 +12,25 @@ module.exports = function(sequelize, DataTypes) {
       associate: models => {
         Comment.belongsTo(models.user);
         Comment.belongsTo(models.post);
+      },
+      isValid: comment => {
+        if (!comment) {
+          return false;
+        }
+
+        if (!comment.userId || !comment.postId || !comment.content) {
+          return false;
+        }
+
+        if (typeof comment.userId != 'number' || typeof comment.postId != 'number' || typeof comment.content != 'string') {
+          return false;
+        }
+
+        if (comment.content.length > 300) {
+          return false;
+        }
+
+        return true;
       }
     }
   });
