@@ -1,0 +1,17 @@
+{
+  "name": "Instanoodles-backend",
+  "description": "description",
+  "authors": "author",
+  "version": "1.0.0",
+  "main": "pathToMain",
+  "dependencies": {
+    "dotenv": "4.0.0",
+    "express": "4.15.2",
+    "passport": "^0.3.2",
+    "passport-http-bearer": "^1.0.1",
+    "passport-oauth2": "^1.4.0",
+    "pg": "6.1.5",
+    "pg-hstore": "2.3.2",
+    "sequelize": "3.30.4"
+  }
+}
