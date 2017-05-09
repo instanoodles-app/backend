@@ -1,6 +1,6 @@
 # Database diagram
 
-![Database diagram](/docs/img/db_diag-png)
+![Database diagram](/docs/img/db_diag.png)
 
 ### yUML code
 ```
