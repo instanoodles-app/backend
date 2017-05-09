@@ -1,6 +1,6 @@
 module.exports = function(sequelize, DataTypes) {
   const Token = sequelize.define('token', {
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primraryKey: true },
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     userId: { type: DataTypes.INTEGER, foreignKey: true },
     value: { type: DataTypes.STRING }
   }, {
@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
         Token.sync();
       },
       associate: models => {
-        Token.hasOne(models.user);
+        Token.belongsTo(models.user);
       }
     }
   });

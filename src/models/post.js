@@ -1,6 +1,6 @@
 module.exports = function(sequelize, DataTypes) {
   const Post = sequelize.define('post', {
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primraryKey: true },
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     authorId: { type: DataTypes.INTEGER, foreignKey: true, required: true },
     textContent: { type: DataTypes.STRING, required: true },
     imageUrl: { type: DataTypes.STRING, required: true }

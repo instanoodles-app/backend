@@ -1,11 +1,12 @@
 module.exports = function (sequelize, DataTypes) {
   const User = sequelize.define('user', {
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primraryKey: true },
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     username: { type: DataTypes.STRING, required: true },
     displayName: { type: DataTypes.STRING, required: true },
     bioDescription: { type: DataTypes.STRING, required: true },
     email: { type: DataTypes.STRING, required: true },
     passwordHash: { type: DataTypes.STRING, required: true },
+    tokenId: { type: DataTypes.INTEGER, foreignKey: true }
   }, {
       classMethods: {
         initTables: () => {
@@ -33,7 +34,7 @@ module.exports = function (sequelize, DataTypes) {
             return false;
           }
 
-          if (user.email.test(/\S+@\S+\.\S+/)) {
+          if (!/\S+@\S+\.\S+/.test(user.email)) {
             return false;
           }
 

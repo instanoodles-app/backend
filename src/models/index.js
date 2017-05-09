@@ -3,7 +3,7 @@ const FS = require('fs');
 const path = require('path');
 require('dotenv').config();
 
-function loadModels(models) {
+function loadModels() {
   const sequelize = new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USERNAME,
@@ -18,7 +18,7 @@ function loadModels(models) {
 
   FS.readdirSync(__dirname)
     .filter(file => {
-      return file.indexOf('.') !== 0 && file !== 'index.js' && models.indexOf(file.split('.')[0]) > - 1;
+      return file.indexOf('.') !== 0 && file !== 'index.js';
     }).forEach(file => {
       let model = sequelize.import(path.join(__dirname, file));
       db[model.name] = model;
@@ -35,4 +35,4 @@ function loadModels(models) {
   return db;
 }
 
-module.exports = loadModels;
+module.exports = loadModels();
