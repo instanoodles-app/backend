@@ -77,10 +77,15 @@ route.post('/', (req, res) => {
   } else respond(400, null, res);
 });
 
+/**
+ * Used to update users
+ */
 route.patch('/',
   authenticate,
   (req, res) => {
     let user = req.user;
+
+    // Copy existing information
     for (let key in req.body) {
       user[key] = req.body[key];
     }
@@ -100,7 +105,11 @@ route.patch('/',
     } else respond(400, null, res);
   });
 
+/**
+ * Used for authentication
+ */
 route.post('/me/authenticate', (req, res) => {
+  // Validate the POST body
   if (!req.body.username || !req.body.password) {
     respond(400, null, res);
     return;
@@ -116,19 +125,22 @@ route.post('/me/authenticate', (req, res) => {
       respond(404, null, res);
       return;
     }
+    // Compare the password hash with the plain text password
     bcrypt.compare(req.body.password, userToken.dataValues.passwordHash, (err, result) => {
       if (err) throw err;
       if (result) {
+        // We passed, respond with the access token.
         respond(200, {
           token: userToken.dataValues.token.dataValues.value
         }, res);
       } else {
+        // Access denied, send a 404
         respond(404, null, res);
       }
     });
   }).catch(e => {
     respond(500, null, res);
-  })
+  });
 });
 
 module.exports = route;
