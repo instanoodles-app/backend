@@ -77,4 +77,58 @@ route.post('/', (req, res) => {
   } else respond(400, null, res);
 });
 
+route.patch('/',
+  authenticate,
+  (req, res) => {
+    let user = req.user;
+    for (let key in req.body) {
+      user[key] = req.body[key];
+    }
+    // Shitty solution
+    user.password = 'temp';
+    if (DB.user.isValid(user)) {
+      DB.user.update(user, {
+        where: {
+          id: req.user.id
+        }
+      }).then(updatedUser => {
+        respond(200, filter(updatedUser), res);
+      }).catch(e => {
+        console.log(e);
+        respond(500, null, res);
+      });
+    } else respond(400, null, res);
+  });
+
+route.post('/me/authenticate', (req, res) => {
+  if (!req.body.username || !req.body.password) {
+    respond(400, null, res);
+    return;
+  }
+
+  DB.user.findOne({
+    where: {
+      username: req.body.username
+    },
+    include: DB.token
+  }).then(userToken => {
+    if (!userToken) {
+      respond(404, null, res);
+      return;
+    }
+    bcrypt.compare(req.body.password, userToken.dataValues.passwordHash, (err, result) => {
+      if (err) throw err;
+      if (result) {
+        respond(200, {
+          token: userToken.dataValues.token.dataValues.value
+        }, res);
+      } else {
+        respond(404, null, res);
+      }
+    });
+  }).catch(e => {
+    respond(500, null, res);
+  })
+});
+
 module.exports = route;
