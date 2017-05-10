@@ -1,27 +1,11 @@
 const express = require('express');
 const app = express();
 
-const passport = require('passport');
-const Strategy = require('passport-http-bearer').Strategy;
 const bodyparser = require('body-parser');
 
-global.DB = require('./src/models');
-
-passport.use(new Strategy((token, cb) => {
-    DB.token.findOne({
-      where: {
-        value: token
-      },
-      include: [DB.user]
-    }).then(user => {
-      if (!user) return cb(new Error('Could not find user'));
-      return cb(null, user.dataValues.user.dataValues);
-    }).catch(e => {
-      console.log(e);
-      cb(e);
-    });
-  }
-));
+const dbLogic = require('./src/models');
+global.DB = dbLogic.db;
+global.Sequelize = dbLogic.sequelize;
 
 app.use(bodyparser.json());
 
@@ -36,7 +20,6 @@ const userController = require('./src/controllers/user');
  */
 app.use(
   '/users', 
-  passport.authenticate('bearer', { session: false }),
   userController
 );
 

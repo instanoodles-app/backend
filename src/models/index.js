@@ -32,7 +32,10 @@ function loadModels() {
   for (let o in db) {
     db[o].associate(db);
   }
-  return db;
+  return {
+    db,
+    sequelize
+  };
 }
 
 module.exports = loadModels();
