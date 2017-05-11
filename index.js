@@ -8,6 +8,7 @@ global.DB = dbLogic.db;
 global.Sequelize = dbLogic.sequelize;
 
 app.use(bodyparser.json());
+app.disable('x-powered-by');
 
 /**
  * Load controllers

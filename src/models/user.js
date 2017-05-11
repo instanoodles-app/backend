@@ -1,7 +1,7 @@
 module.exports = function (sequelize, DataTypes) {
   const User = sequelize.define('user', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    username: { type: DataTypes.STRING, required: true },
+    username: { type: DataTypes.STRING, required: true, unique: true },
     displayName: { type: DataTypes.STRING, required: true },
     bioDescription: { type: DataTypes.STRING, required: true },
     email: { type: DataTypes.STRING, required: true },
@@ -17,6 +17,7 @@ module.exports = function (sequelize, DataTypes) {
           User.hasMany(models.post);
           User.hasMany(models.like);
           User.hasMany(models.comment);
+          User.hasMany(models.follower);
         },
         isValid: user => {
           if (!user) {
