@@ -2,13 +2,16 @@ const route = require('express').Router();
 const respond = require('../util/response');
 const authenticate = require('../util/authentication');
 
+const followerController = require('./follower');
+
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+
 
 /**
  * Get me
  */
-route.get('/me/profile',
+route.get('/me',
   authenticate,
   (req, res) => {
     if (req.user) {
@@ -34,7 +37,7 @@ function filter(user, showemail) {
 /**
  * Return user by id
  */
-route.get('/:id',
+route.get('/:id(\\d+)/',
   authenticate,
   (req, res) => {
     DB.user.findOne({
@@ -108,7 +111,7 @@ route.patch('/',
 /**
  * Used for authentication
  */
-route.post('/me/authenticate', (req, res) => {
+route.post('/authenticate', (req, res) => {
   // Validate the POST body
   if (!req.body.username || !req.body.password) {
     respond(400, null, res);
@@ -142,5 +145,7 @@ route.post('/me/authenticate', (req, res) => {
     respond(500, null, res);
   });
 });
+
+route.use('/:id/followers', followerController);
 
 module.exports = route;
