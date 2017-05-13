@@ -132,6 +132,6 @@ route.post('/authenticate', (req, res) => {
   });
 });
 
-route.use('/:id/followers', followerController);
+route.use('/:id', followerController);
 
 module.exports = route;
