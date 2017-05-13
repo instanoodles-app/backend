@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('../express');
 const app = express();
 
 const bodyparser = require('body-parser');
@@ -8,6 +8,14 @@ global.DB = dbLogic.db;
 global.Sequelize = dbLogic.sequelize;
 
 app.use(bodyparser.json());
+app.use((req, res, next) => {
+  try {
+    req.splittedParams = req.path.split('/');
+  } catch (e) {
+    console.log(e);
+  }
+  next();
+});
 app.disable('x-powered-by');
 
 /**

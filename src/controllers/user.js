@@ -8,6 +8,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 
 
+
 /**
  * Get me
  */
@@ -15,24 +16,9 @@ route.get('/me',
   authenticate,
   (req, res) => {
     if (req.user) {
-      respond(200, filter(req.user, true), res);
+      respond(200, DB.user.filter(req.user, true), res);
     } else respond(404, null, res);
   });
-
-function filter(user, showemail) {
-  let filteredUser = {
-    id: user.id,
-    username: user.username,
-    displayName: user.displayName,
-    bioDescription: user.bioDescription,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt
-  }
-
-  if (showemail)
-    filteredUser.email = user.email;
-  return filteredUser;
-}
 
 /**
  * Return user by id
@@ -49,7 +35,7 @@ route.get('/:id(\\d+)/',
         respond(404, null, res);
         return;
       }
-      respond(200, filter(user), res);
+      respond(200, DB.user.filter(user), res);
     }).catch(e => {
       console.log(e);
       respond(500, null, res);
@@ -100,7 +86,7 @@ route.patch('/',
           id: req.user.id
         }
       }).then(updatedUser => {
-        respond(200, filter(updatedUser), res);
+        respond(200, DB.user.filter(updatedUser), res);
       }).catch(e => {
         console.log(e);
         respond(500, null, res);

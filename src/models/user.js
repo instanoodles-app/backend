@@ -17,7 +17,6 @@ module.exports = function (sequelize, DataTypes) {
           User.hasMany(models.post);
           User.hasMany(models.like);
           User.hasMany(models.comment);
-          User.hasMany(models.follower);
         },
         isValid: user => {
           if (!user) {
@@ -45,6 +44,20 @@ module.exports = function (sequelize, DataTypes) {
           }
 
           return true;
+        },
+        filter: (user, showemail) => {
+          let filteredUser = {
+            id: user.id,
+            username: user.username,
+            displayName: user.displayName,
+            bioDescription: user.bioDescription,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
+          }
+
+          if (showemail)
+            filteredUser.email = user.email;
+          return filteredUser;
         }
       }
     });
