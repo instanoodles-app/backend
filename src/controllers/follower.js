@@ -8,23 +8,21 @@ route.use((req, res, next) => {
   next();
 });
 
-route.get('/followers',
-  authenticate,
-  (req, res) => {
-    Sequelize.query('select * from followers inner join users on (users.id = followers."userId") where "followingId" = :uid', {
-      replacements: { uid: req.pathUserId },
-      type: Sequelize.QueryTypes.SELECT
-    }).then(followers => {
-      let arr = [];
-      for (let i = 0; i < followers.length; i++) {
-        arr[i] = DB.user.filter(followers[i]);
-      }
-      respond(200, arr, res);
-    }).catch(e => {
-      respond(500, null, res);
-      console.log(e);
-    });
+route.get('/followers', (req, res) => {
+  Sequelize.query('select * from followers inner join users on (users.id = followers."userId") where "followingId" = :uid', {
+    replacements: { uid: req.pathUserId },
+    type: Sequelize.QueryTypes.SELECT
+  }).then(followers => {
+    let arr = [];
+    for (let i = 0; i < followers.length; i++) {
+      arr[i] = DB.user.filter(followers[i]);
+    }
+    respond(200, arr, res);
+  }).catch(e => {
+    respond(500, null, res);
+    console.log(e);
   });
+});
 
 route.get('/following',
   authenticate,
