@@ -23,6 +23,7 @@ app.disable('x-powered-by');
  */
 
 const userController = require('./src/controllers/user');
+const postController = require('./src/controllers/post').rootRoute;
 
 /**
  * Register controllers
@@ -30,6 +31,11 @@ const userController = require('./src/controllers/user');
 app.use(
   '/users', 
   userController
+);
+
+app.use(
+  '/posts',
+  postController
 );
 
 /**

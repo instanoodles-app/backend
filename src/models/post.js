@@ -12,14 +12,14 @@ module.exports = function(sequelize, DataTypes) {
       associate: models => {
         Post.hasMany(models.like);
         Post.hasMany(models.comment);
-        Post.belongsTo(models.user);
+        Post.belongsTo(models.user, { foreignKey: 'authorId' });
       },
       isValid: post => {
         if (!post) {
           return false;
         }
 
-        if (!post.textContent || !post.image) {
+        if (!post.textContent || !post.imageUrl) {
           return false;
         }
 
@@ -27,7 +27,7 @@ module.exports = function(sequelize, DataTypes) {
           return false;
         }
 
-        if (comment.textContent.length > 300) {
+        if (post.textContent.length > 300) {
           return false;
         }
 

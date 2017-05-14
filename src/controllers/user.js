@@ -3,6 +3,7 @@ const respond = require('../util/response');
 const authenticate = require('../util/authentication');
 
 const followerController = require('./follower');
+const postController = require('./post').userRoute;
 
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
@@ -133,5 +134,6 @@ route.post('/authenticate', (req, res) => {
 });
 
 route.use('/:id', followerController);
+route.use('/:id/posts', postController);
 
 module.exports = route;
