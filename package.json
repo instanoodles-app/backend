@@ -15,5 +15,12 @@
     "pg": "6.1.5",
     "pg-hstore": "2.3.2",
     "sequelize": "3.30.4"
+  },
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha --recursive"
   }
 }
