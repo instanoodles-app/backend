@@ -14,17 +14,23 @@ module.exports = function(sequelize, DataTypes) {
       },
       isValid: like => {
         if (!like) {
-          return false;
+          return null;
         }
 
         if (!like.userId || !like.postId) {
-          return false;
+          return null;
         }
 
         if (typeof like.userId != 'number' || typeof like.postId != 'number') {
-          return false;
+          return null;
         }
-        return true;
+
+        return Like.count({
+          where: {
+            userId: like.userId,
+            postId: like.postId
+          }
+        });
       }
     }
   });

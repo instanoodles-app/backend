@@ -19,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
           return false;
         }
 
-        if (!post.textContent || !post.imageUrl) {
+        if (!post.textContent || !post.imageData) {
           return false;
         }
 

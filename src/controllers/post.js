@@ -3,6 +3,9 @@ const rootRoute = require('express').Router();
 const respond = require('../util/response');
 const authenticate = require('../util/authentication');
 
+const likeController = require('./like');
+const commentController = require('./comment');
+
 const followerController = require('./follower');
 
 /**
@@ -19,9 +22,7 @@ rootRoute.get('/:postId(\\d+)/',
       },
       include: [{
         model: DB.user,
-        attributes: {
-          exclude: ['passwordHash', 'email', 'tokenId']
-        }
+        attributes: ['username']
       }]
     }).then(post => {
       if (post) {
@@ -41,6 +42,7 @@ rootRoute.post('/',
   (req, res) => {
     if (DB.post.isValid(req.body)) {
       req.body.authorId = req.user.id;
+      // TODO: Upload image to Amazon S3 and save the url
       DB.post.create(req.body).then(post => {
         respond(200, post, res);
       }).catch(e => {
@@ -61,9 +63,7 @@ userRoute.get('/', (req, res) => {
     },
     include: [{
       model: DB.user,
-      attributes: {
-        exclude: ['passwordHash', 'email', 'tokenId']
-      }
+      attributes: ['username']
     }]
   }).then(posts => {
     respond(200, posts, res);
@@ -72,6 +72,9 @@ userRoute.get('/', (req, res) => {
     respond(500, null, res);
   });
 });
+
+rootRoute.use('/:id/likes', likeController);
+rootRoute.use('/:id/comments', commentController);
 
 module.exports = {
   userRoute,
