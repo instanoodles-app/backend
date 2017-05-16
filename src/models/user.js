@@ -39,7 +39,10 @@ module.exports = function (sequelize, DataTypes) {
             return false;
           }
 
-          if (user.username.length > 32 || user.displayName.length > 64 || user.bioDescription.length > 256) {
+          if ((user.username.length > 32 || user.username.length < 4) ||
+            user.displayName.length > 64 ||
+            user.bioDescription.length > 255 ||
+            (user.password.length < 8 || user.password.length > 255)) {
             return false;
           }
 
