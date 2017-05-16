@@ -19,11 +19,11 @@ module.exports = function(sequelize, DataTypes) {
           return false;
         }
 
-        if (!post.textContent || !post.imageData) {
+        if (!post.textContent || !post.image) {
           return false;
         }
 
-        if (typeof post.textContent != 'string') {
+        if (typeof post.textContent != 'string' || typeof post.image != 'object') {
           return false;
         }
 
