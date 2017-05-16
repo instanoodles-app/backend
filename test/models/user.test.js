@@ -30,4 +30,76 @@ describe('Running tests for validation method in user model', () => {
 
     assert(validationMethod(user) === false);
   });
-})
+
+  it('returns false if inputs are the wrong type', () => {
+    let types = [1, {}, [], () => { }];
+    let user = {
+      username: '',
+      password: '',
+      displayName: '',
+      bioDescription: '',
+      email: ''
+    };
+
+    for (let key in user) {
+      user[key] = types[Math.floor(Math.random() * types.length)];
+    }
+
+    assert(validationMethod(user) === false);
+  });
+
+  it('returns false if the email format is invalid', () => {
+    let user = {
+      username: '',
+      password: '',
+      displayName: '',
+      bioDescription: '',
+      email: '1234'
+    };
+    assert(validationMethod(user) === false);
+  });
+
+  it('returns false if the username is more than 64 bytes', () => {
+    let user = {
+      username: require('crypto').randomBytes(128).toString('hex'),
+      password: '',
+      displayName: '',
+      bioDescription: '',
+      email: 'asd@asd.com'
+    };
+    assert(validationMethod(user) === false);
+  });
+
+  it('returns false if the username is less than 4 bytes', () => {
+    let user = {
+      username: '',
+      password: '',
+      displayName: '',
+      bioDescription: '',
+      email: 'asd@asd.com'
+    };
+    assert(validationMethod(user) === false);
+  });
+
+  it('returns false if the password is less than 8 bytes', () => {
+    let user = {
+      username: 'asdasd',
+      password: '',
+      displayName: '',
+      bioDescription: '',
+      email: 'asd@asd.com'
+    };
+    assert(validationMethod(user) === false);
+  });
+
+  it('returns false if the password is more than 255 bytes', () => {
+    let user = {
+      username: 'asdasd',
+      password: require('crypto').randomBytes(256).toString('hex'),
+      displayName: '',
+      bioDescription: '',
+      email: 'asd@asd.com'
+    };
+    assert(validationMethod(user) === false);
+  });
+});
