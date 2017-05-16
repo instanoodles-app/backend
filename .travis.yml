@@ -1,6 +1,6 @@
 language: node_js
 before_script:
   - npm install -g mocha
-  - npm install --dev
+  - npm install mocha
 node_js:
   - "7"
