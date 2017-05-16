@@ -1,4 +1,4 @@
-[Build](https://api.travis-ci.org/instanoodles-app/backend.svg?branch=master)
+![Build](https://api.travis-ci.org/instanoodles-app/backend.svg?branch=master)
 
 # Instanoodles backend
 
