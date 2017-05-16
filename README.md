@@ -1,3 +1,5 @@
+[Build](https://api.travis-ci.org/instanoodles-app/backend.svg?branch=master)
+
 # Instanoodles backend
 
 Backend for instanoodles. Created with Node.js, Express and a bunch of middleware.
