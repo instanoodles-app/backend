@@ -1,14 +1,13 @@
 const route = require('express').Router();
 const respond = require('../util/response');
 const authenticate = require('../util/authentication');
+const CDN = require('../services/cdn');
 
 const followerController = require('./follower');
 const postController = require('./post').userRoute;
 
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
-
-
 
 /**
  * Get me

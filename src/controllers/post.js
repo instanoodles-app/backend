@@ -8,6 +8,8 @@ const commentController = require('./comment');
 
 const followerController = require('./follower');
 
+const feedQuery = require('../util/feed');
+
 /**
  * Return posts by id
  */
@@ -72,6 +74,20 @@ userRoute.get('/', (req, res) => {
     respond(500, null, res);
   });
 });
+
+rootRoute.get('/feed',
+  authenticate,
+  (req, res) => {
+    Sequelize.query(feedQuery, {
+      replacements: { uid: req.user.id },
+      type: Sequelize.QueryTypes.SELECT
+    }).then(feed => {
+      respond(200, feed, res);
+    }).catch(e => {
+      console.log(e);
+      respond(500, null, res);
+    });
+  });
 
 rootRoute.use('/:id/likes', likeController);
 rootRoute.use('/:id/comments', commentController);
