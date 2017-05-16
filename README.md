@@ -13,8 +13,12 @@ Backend for instanoodles. Created with Node.js, Express and a bunch of middlewar
     - `DB_PASSWORD`
     - `DB_HOST` (default is localhost)
 3. Run `npm install` to install all required dependencies.
-4. To start the server, run `npm start`.
-5. 
+4. You'll also need an AWS account for S3 and cloudfront.
+5. Define these environment variables for the CDN
+    - S3_BUCKET
+    - AWS\_ACCESS_KEY
+    - AWS\_ACCESS_SECRET
+5. To start the server, run `npm start`.
 
 ## Links
 
