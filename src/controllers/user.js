@@ -24,7 +24,6 @@ route.get('/me',
  * Return user by id
  */
 route.get('/:id(\\d+)/',
-  authenticate,
   (req, res) => {
     DB.user.findOne({
       where: {
@@ -128,6 +127,27 @@ route.post('/authenticate', (req, res) => {
       }
     });
   }).catch(e => {
+    respond(500, null, res);
+  });
+});
+
+route.get('/search', (req, res) => {
+  if (!req.query.query) {
+    respond(400, null, res);
+    return;
+  }
+
+  DB.user.findAll({
+    where: {
+      username: {
+        $like: `%${req.query.query}%`
+      }
+    },
+    attributes: ['username', 'displayName']
+  }).then(users => {
+    respond(200, users, res);
+  }).catch(e => {
+    console.log(e);
     respond(500, null, res);
   });
 });
