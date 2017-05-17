@@ -2,11 +2,13 @@ const express = require('express');
 const app = express();
 
 const bodyparser = require('body-parser');
+const cors = require('cors');
 
 const dbLogic = require('./src/models');
 global.DB = dbLogic.db;
 global.Sequelize = dbLogic.sequelize;
 
+app.use(cors());
 app.use(bodyparser.json());
 app.use((req, res, next) => {
   try {
