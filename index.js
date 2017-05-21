@@ -10,6 +10,7 @@ global.Sequelize = dbLogic.sequelize;
 
 app.use(cors());
 app.use(bodyparser.json());
+app.use(bodyparser.urlencoded());
 app.use((req, res, next) => {
   try {
     req.splittedParams = req.path.split('/');

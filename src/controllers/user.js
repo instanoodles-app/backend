@@ -59,6 +59,10 @@ route.post('/', (req, res) => {
     }).then(user => {
       respond(200, user, res);
     }).catch(e => {
+      if (e.code == '23505') {
+        respond(403, null, res);
+        return;
+      }
       respond(500, null, res);
       console.log(e);
     });
@@ -78,7 +82,7 @@ route.patch('/',
       user[key] = req.body[key];
     }
     // Shitty solution
-    user.password = 'temp';
+    delete user.password;
     if (DB.user.isValid(user)) {
       DB.user.update(user, {
         where: {

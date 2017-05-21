@@ -10,6 +10,8 @@ const followerController = require('./follower');
 
 const feedQuery = require('../util/feed');
 
+const CDN = require('../services/cdn');
+
 /**
  * Return posts by id
  */
@@ -42,11 +44,21 @@ rootRoute.get('/:postId(\\d+)/',
 rootRoute.post('/',
   authenticate,
   (req, res) => {
+    let imageKey = `${req.user.id}${req.user.username}${new Date().getTime()}${Math.random().toString(36)}`
     if (DB.post.isValid(req.body)) {
+      let url = `https://${process.env.S3_BUCKET}.s3.amazonaws.com/${imageKey}`;
       req.body.authorId = req.user.id;
+      req.body.imageUrl = url;
       // TODO: Upload image to Amazon S3 and save the url
       DB.post.create(req.body).then(post => {
-        respond(200, post, res);
+        if (post) {
+          let image = req.body.image;
+          image.key = imageKey;
+          CDN.uploadFile(image, (err, data) => {
+            if (err) throw err;
+          });
+          respond(200, post, res);
+        } else throw new Error('Something went wrong');
       }).catch(e => {
         console.log(e);
         respond(500, null, res);
@@ -55,7 +67,7 @@ rootRoute.post('/',
   });
 
 userRoute.get('/', (req, res) => {
-  let userId = req.splittedParams[2];
+  let userId = req.splittedParams[2] === 'me' ? req.user.id : req.splittedParams[2];
   DB.post.findAll({
     where: {
       authorId: userId
