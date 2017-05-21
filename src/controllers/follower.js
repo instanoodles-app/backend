@@ -10,7 +10,7 @@ route.use((req, res, next) => {
 
 route.get('/followers', (req, res) => {
   Sequelize.query('select * from followers inner join users on (users.id = followers."userId") where "followingId" = :uid', {
-    replacements: { uid: req.pathUserId },
+    replacements: { uid: req.pathUserId === 'me' ? req.user.id : req.pathUserId },
     type: Sequelize.QueryTypes.SELECT
   }).then(followers => {
     let arr = [];
@@ -27,7 +27,7 @@ route.get('/followers', (req, res) => {
 route.get('/following',
   (req, res) => {
     Sequelize.query('select * from followers inner join users on (users.id = followers."followingId") where "userId" = :uid', {
-      replacements: { uid: req.pathUserId },
+      replacements: { uid: req.pathUserId === 'me' ? req.user.id : req.pathUserId },
       type: Sequelize.QueryTypes.SELECT
     }).then(followers => {
       let arr = [];
