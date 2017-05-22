@@ -16,7 +16,8 @@ route.get('/', (req, res) => {
     include: [{
       model: DB.user,
       attributes: ['username']
-    }]
+    }],
+    order: '"createdAt" ASC'
   }).then(comments => {
     respond(200, comments, res);
   }).catch(e => {
