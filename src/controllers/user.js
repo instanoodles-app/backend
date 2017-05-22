@@ -147,7 +147,7 @@ route.get('/search', (req, res) => {
         $like: `%${req.query.query}%`
       }
     },
-    attributes: ['username', 'displayName']
+    attributes: ['id', 'username', 'displayName']
   }).then(users => {
     respond(200, users, res);
   }).catch(e => {
