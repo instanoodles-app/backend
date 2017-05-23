@@ -9,8 +9,9 @@ global.DB = dbLogic.db;
 global.Sequelize = dbLogic.sequelize;
 
 app.use(cors());
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded());
+app.use(bodyparser.json({
+  limit: 10000000
+}));
 app.disable('x-powered-by');
 app.use((req, res, next) => {
   try {
@@ -46,6 +47,7 @@ app.use(
  * Error handler
  */
 app.use((err, req, res, next) => {
+  console.log(err);
   res.json(err);
 });
 

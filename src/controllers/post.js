@@ -38,7 +38,7 @@ rootRoute.get('/:postId(\\d+)/',
       if (req.user) {
         DB.like.count({
           where: {
-            userdId: req.user.id,
+            userId: req.user.id,
             postId: post.id
           }
         }).then(count => {
@@ -92,7 +92,8 @@ userRoute.get('/', (req, res) => {
     include: [{
       model: DB.user,
       attributes: ['username']
-    }]
+    }],
+    order: '"createdAt" DESC'
   }).then(posts => {
     respond(200, posts, res);
   }).catch(e => {
