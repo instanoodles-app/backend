@@ -1,6 +1,6 @@
 const route = require('express').Router();
 const respond = require('../util/response');
-const authenticate = require('../util/authentication');
+const authenticate = require('../util/authentication').authenticate;
 
 // Nice hack for getting userId from route.
 route.use((req, res, next) => {

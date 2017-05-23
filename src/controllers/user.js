@@ -1,6 +1,7 @@
 const route = require('express').Router();
 const respond = require('../util/response');
-const authenticate = require('../util/authentication');
+const authenticate = require('../util/authentication').authenticate;
+const loadUser = require('../util/authentication').loadUser;
 const CDN = require('../services/cdn');
 
 const followerController = require('./follower');
@@ -24,17 +25,29 @@ route.get('/me',
  * Return user by id
  */
 route.get('/:id(\\d+)/',
+  loadUser,
   (req, res) => {
     DB.user.findOne({
       where: {
         id: req.params.id
-      }
+      },
     }).then(user => {
       if (!user) {
         respond(404, null, res);
         return;
       }
-      respond(200, DB.user.filter(user), res);
+      user = DB.user.filter(user);
+      if (req.user) {
+        DB.follower.count({
+          where: {
+            userId: req.user.id,
+            followingId: user.id
+          }
+        }).then(count => {
+          user.isFollowing = count === 1 ? true : false;
+          respond(200, user, res);
+        });
+      } else respond(200, user, res);
     }).catch(e => {
       console.log(e);
       respond(500, null, res);

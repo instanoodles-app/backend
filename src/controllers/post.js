@@ -1,7 +1,8 @@
 const userRoute = require('express').Router();
 const rootRoute = require('express').Router();
 const respond = require('../util/response');
-const authenticate = require('../util/authentication');
+const authenticate = require('../util/authentication').authenticate;
+const loadUser = require('../util/authentication').loadUser;
 
 const likeController = require('./like');
 const commentController = require('./comment');
@@ -16,6 +17,7 @@ const CDN = require('../services/cdn');
  * Return posts by id
  */
 rootRoute.get('/:postId(\\d+)/',
+  loadUser,
   (req, res) => {
     DB.post.findOne({
       where: {
@@ -29,9 +31,21 @@ rootRoute.get('/:postId(\\d+)/',
         attributes: ['username']
       }]
     }).then(post => {
-      if (post) {
-        respond(200, post, res);
-      } else respond(404, null, res);
+      if (!post) {
+        respond(404, null, res);
+      }
+
+      if (req.user) {
+        DB.like.count({
+          where: {
+            userdId: req.user.id,
+            postId: post.id
+          }
+        }).then(count => {
+          post.dataValues.isLiked = count === 1 ? true : false;
+          respond(200, post, res);
+        });
+      } else respond(200, post, res);
     }).catch(e => {
       console.log(e);
       respond(500, null, res);
@@ -94,7 +108,25 @@ rootRoute.get('/feed',
       replacements: { uid: req.user.id },
       type: Sequelize.QueryTypes.SELECT
     }).then(feed => {
-      respond(200, feed, res);
+      // Pretty shitty solution once again.
+      DB.like.findAll({
+        where: {
+          userId: req.user.id
+        }
+      }).then(userLikes => {
+        let likesMap = {};
+        for (let like of userLikes) {
+          likesMap[like.postId] = like;
+        }
+        let newFeed = [];
+        for (let post of feed) {
+          if (likesMap[post.id])
+            post.isLiked = true;
+          else post.isLiked = false;
+          newFeed.push(post);
+        }
+        respond(200, newFeed, res);
+      });
     }).catch(e => {
       console.log(e);
       respond(500, null, res);
