@@ -57,11 +57,17 @@ route.put('/followers',
       followingId: req.pathUserId
     };
 
-    DB.follower.create(follower).then(follower => {
-      respond(200, follower, res);
-    }).catch(e => {
-      console.log(e);
-      respond(500, null, res);
+    DB.follower.isValid(follower).then(isValid => {
+      if (!isValid) {
+        respond(403, null, res);
+        return;
+      }
+      DB.follower.create(follower).then(follower => {
+        respond(200, follower, res);
+      }).catch(e => {
+        console.log(e);
+        respond(500, null, res);
+      });
     });
   });
 

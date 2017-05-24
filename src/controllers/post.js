@@ -80,27 +80,29 @@ rootRoute.post('/',
     } else respond(400, null, res);
   });
 
-userRoute.get('/', (req, res) => {
-  let userId = req.splittedParams[2] === 'me' ? req.user.id : req.splittedParams[2];
-  DB.post.findAll({
-    where: {
-      authorId: userId
-    },
-    attributes: {
-      exclude: ['userId']
-    },
-    include: [{
-      model: DB.user,
-      attributes: ['username']
-    }],
-    order: '"createdAt" DESC'
-  }).then(posts => {
-    respond(200, posts, res);
-  }).catch(e => {
-    console.log(e);
-    respond(500, null, res);
+userRoute.get('/',
+  loadUser,
+  (req, res) => {
+    let userId = req.splittedParams[2] === 'me' ? req.user.id : req.splittedParams[2];
+    DB.post.findAll({
+      where: {
+        authorId: userId
+      },
+      attributes: {
+        exclude: ['userId']
+      },
+      include: [{
+        model: DB.user,
+        attributes: ['username']
+      }],
+      order: '"createdAt" DESC'
+    }).then(posts => {
+      respond(200, posts, res);
+    }).catch(e => {
+      console.log(e);
+      respond(500, null, res);
+    });
   });
-});
 
 rootRoute.get('/feed',
   authenticate,

@@ -8,6 +8,11 @@ module.exports = function(sequelize, DataTypes) {
         Follower.sync();
       },
       associate: models => {
+      },
+      isValid: follower => {
+        return Follower.count({
+          where: follower
+        }).then(c => c == 0)
       }
     }
   });
