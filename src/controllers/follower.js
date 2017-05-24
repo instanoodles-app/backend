@@ -28,6 +28,7 @@ route.get('/followers',
   });
 
 route.get('/following',
+  loadUser,
   (req, res) => {
     Sequelize.query('select * from followers inner join users on (users.id = followers."followingId") where "userId" = :uid', {
       replacements: { uid: req.pathUserId === 'me' ? req.user.id : req.pathUserId },
