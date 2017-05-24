@@ -1,6 +1,7 @@
 const route = require('express').Router();
 const respond = require('../util/response');
 const authenticate = require('../util/authentication').authenticate;
+const loadUser = require('../util/authentication').loadUser;
 
 // Nice hack for getting userId from route.
 route.use((req, res, next) => {
@@ -8,21 +9,23 @@ route.use((req, res, next) => {
   next();
 });
 
-route.get('/followers', (req, res) => {
-  Sequelize.query('select * from followers inner join users on (users.id = followers."userId") where "followingId" = :uid', {
-    replacements: { uid: req.pathUserId === 'me' ? req.user.id : req.pathUserId },
-    type: Sequelize.QueryTypes.SELECT
-  }).then(followers => {
-    let arr = [];
-    for (let i = 0; i < followers.length; i++) {
-      arr[i] = DB.user.filter(followers[i]);
-    }
-    respond(200, arr, res);
-  }).catch(e => {
-    respond(500, null, res);
-    console.log(e);
+route.get('/followers',
+  loadUser,
+  (req, res) => {
+    Sequelize.query('select * from followers inner join users on (users.id = followers."userId") where "followingId" = :uid', {
+      replacements: { uid: req.pathUserId === 'me' ? req.user.id : req.pathUserId },
+      type: Sequelize.QueryTypes.SELECT
+    }).then(followers => {
+      let arr = [];
+      for (let i = 0; i < followers.length; i++) {
+        arr[i] = DB.user.filter(followers[i]);
+      }
+      respond(200, arr, res);
+    }).catch(e => {
+      respond(500, null, res);
+      console.log(e);
+    });
   });
-});
 
 route.get('/following',
   (req, res) => {
