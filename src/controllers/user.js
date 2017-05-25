@@ -72,7 +72,7 @@ route.post('/', (req, res) => {
     }).then(user => {
       respond(200, user, res);
     }).catch(e => {
-      if (e.code == '23505') {
+      if (e.original.code == '23505') {
         respond(403, null, res);
         return;
       }
