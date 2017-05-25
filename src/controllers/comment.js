@@ -4,7 +4,7 @@ const authenticate = require('../util/authentication').authenticate;
 
 // Nice hack for getting userId from route.
 route.use((req, res, next) => {
-  req.pathPostId = req.splittedParams[2];
+  req.pathPostId = req.splittedParams[3];
   next();
 });
 

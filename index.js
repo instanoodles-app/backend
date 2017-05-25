@@ -33,12 +33,12 @@ const postController = require('./src/controllers/post').rootRoute;
  * Register controllers
  */
 app.use(
-  '/users', 
+  '/api/users', 
   userController
 );
 
 app.use(
-  '/posts',
+  '/api/posts',
   postController
 );
 

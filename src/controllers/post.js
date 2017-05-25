@@ -83,7 +83,7 @@ rootRoute.post('/',
 userRoute.get('/',
   loadUser,
   (req, res) => {
-    let userId = req.splittedParams[2] === 'me' ? req.user.id : req.splittedParams[2];
+    let userId = req.splittedParams[3] === 'me' ? req.user.id : req.splittedParams[3];
     DB.post.findAll({
       where: {
         authorId: userId
